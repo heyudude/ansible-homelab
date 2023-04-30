@@ -1,47 +1,38 @@
 # Ansible-Homelab
+A repository that collects the configuration of my home servers and the applications deployed on them. And some more side playbooks and roles, because I'm too lazy to create a separate repository and there are dependencies between roles.
+Using
 
-Репозиторий, в котором собрана конфигурация моих домашних серверов и развернутых на них приложений. И еще некоторые побочные плейбуки и роли, потому что лень создавать отдельный репозиторий и есть зависимости между ролями.
+    One command to configure Proxmox hosts, configure DNS, create LXC containers and run services in them on Docker
 
-## Использование
-
-* Одна команда для настройки хостов Proxmox, настройки DNS, создания контейнеров LXC и запуска в них сервисов на Docker
-
-```shell
 ansible-playbook main.yml
-```
 
-* Чтобы сократить время выполнения, можно запускать отдельные задачи с помощью тегов
-  * `pve` - все задачи для хостов Proxmox
-  * `pve_common` - отдельная задача для хостов Proxmox
-  * `svc` - задачи сразу для всех docker-контейнеров
-  * `mgmt` (имя хоста) - задачи для конкретного хоста LXC
-  * `portainer` (имя контейнера) - задачи для конкретного docker-контейнера
-  * `upgrade_packages` - обновление пакетов на всех хостах LXC
-  * `dns` - задачи для DNS-сервера на роутере
+    To reduce the runtime, you can run individual tasks using the
+        pve - all tasks for Proxmox hosts
+        pve_common - a separate task for Proxmox hosts
+        svc - tasks for all docker containers at once.
+        mgmt (host name) - tasks for a specific LXC host
+        portainer (container name) - tasks for a specific docker container
+        upgrade_packages - updates packages on all LXC hosts.
+        dns - Tasks for the DNS server in the router
 
-```shell
 ansible-playbook main.yml -t svc
-```
 
-## Ansible Vault
+Ansible Vault
 
-Строка
+The line
 
-```shell
 ansible-vault encrypt_string --encrypt-vault-id default --vault-password-file .vault_password --stdin-name 'secret'
-```
 
-Файл
+File
 
-```shell
 ansible-vault decrypt group_vars/all/vault.yml --vault-password-file .vault_password
 ansible-vault encrypt group_vars/all/vault.yml
-```
 
-## Как добавить новое приложение
+How to add a new application
 
-1. Конфигурация в Ansible
-2. Записи DNS в `deploy_homelab_set_static_dns.yml` для локального доступа через Traefik
-3. Записи DNS на хостинге для доступа через интернет
-4. Прокси хост в `Nginx Proxy Manager`
-5. Пользователи в группе приложения в `FreeIPA`
+    Configuration in Ansible
+    DNS entries in deploy_homelab_set_static_dns.yml for local access via Traefik
+    Hosting DNS entries for internet access
+    Proxy host in Nginx Proxy Manager
+    Users in the application group in FreeIPA
+
